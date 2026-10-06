@@ -1,0 +1,1 @@
+"""Process-independent domain contracts."""
