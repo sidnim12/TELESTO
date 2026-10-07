@@ -775,9 +775,11 @@ flowchart TB
 TELESTO/
 ├── apps/
 ├── biocontrolos/
-│   └── environment/
-│       ├── process_adapter.py
-│       └── fermentation_env.py
+│   └── process/
+│       ├── base/
+│       │   └── process_adapter.py
+│       └── synthetic/
+│           └── README.md
 ├── configs/
 ├── data/
 ├── docs/
