@@ -1,0 +1,16 @@
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Output / generated data
+*.pkl
+*.csv
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Unused legacy scripts
+seed_and_run.py
