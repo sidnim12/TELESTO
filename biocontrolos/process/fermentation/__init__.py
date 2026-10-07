@@ -7,3 +7,7 @@ The external simulator must not be accessed directly by other TELESTO
 components. Future control, RL, state estimation, and decision-making
 modules should interact with the fermentation process through this package.
 """
+
+from .simulator import DEFAULT_BATCH_FLAGS, FermentationBatch, FermentationSimulator
+
+__all__ = ["DEFAULT_BATCH_FLAGS", "FermentationBatch", "FermentationSimulator"]

@@ -1,12 +1,13 @@
 """TELESTO wrapper around the external IndPenSim fermentation simulator."""
 
-from dataclasses import dataclass
-from pathlib import Path
 import sys
-from typing import Callable
+from collections.abc import Callable
+from dataclasses import dataclass
+from importlib import import_module
+from importlib.util import module_from_spec, spec_from_file_location
+from pathlib import Path
 
 import numpy as np
-
 
 # ---------------------------------------------------------------------------
 # Default IndPenSim configuration
@@ -18,6 +19,8 @@ DEFAULT_BATCH_FLAGS = {
     "Batch_length": [0],
     "Raman_spec": [0],
 }
+
+_EXTERNAL_PACKAGE_NAME = "_telesto_indpensim"
 
 
 # ---------------------------------------------------------------------------
@@ -78,17 +81,41 @@ class FermentationSimulator:
                 f"IndPenSim simulator not found at: {self.simulator_root}"
             )
 
-    def _load_runner(self) -> Callable:
-        """Load the external IndPenSim runner."""
+    def _load_runner(self) -> Callable[..., object]:
+        """Load IndPenSim under a private namespace.
 
-        simulator_path = str(self.simulator_root)
+        The vendored project calls its package ``simulator``, which is too
+        generic to add to the global import path safely and clashes with this
+        module's filename. Loading it under a TELESTO-owned alias preserves its
+        relative imports without exposing that ambiguous top-level name.
+        """
 
-        if simulator_path not in sys.path:
-            sys.path.insert(0, simulator_path)
+        package_root = self.simulator_root / "simulator"
+        package_init = package_root / "__init__.py"
+        if not package_init.is_file():
+            raise FileNotFoundError(
+                f"IndPenSim package entry point not found at: {package_init}"
+            )
 
-        from simulator.simulation_runner import indpensim_run
+        if _EXTERNAL_PACKAGE_NAME not in sys.modules:
+            spec = spec_from_file_location(
+                _EXTERNAL_PACKAGE_NAME,
+                package_init,
+                submodule_search_locations=[str(package_root)],
+            )
+            if spec is None or spec.loader is None:
+                raise ImportError(f"Unable to load IndPenSim from: {package_init}")
 
-        return indpensim_run
+            module = module_from_spec(spec)
+            sys.modules[_EXTERNAL_PACKAGE_NAME] = module
+            try:
+                spec.loader.exec_module(module)
+            except Exception:
+                sys.modules.pop(_EXTERNAL_PACKAGE_NAME, None)
+                raise
+
+        runner_module = import_module(f"{_EXTERNAL_PACKAGE_NAME}.simulation_runner")
+        return runner_module.indpensim_run
 
     def run_batch(self) -> FermentationBatch:
         """Run one fermentation batch and return TELESTO-owned trajectories."""
