@@ -1,0 +1,54 @@
+[metadata]
+name = "telesto-fermentation-baseline"
+version = "0.1"
+process = "fed-batch microbial fermentation"
+simulator = "IndPenSim"
+status = "research-testbed"
+
+[simulator]
+batch_fault_order_reference = 0
+control_strategy = 0
+batch_length = 0
+raman_spec = 0
+
+[state]
+variables = [
+    "biomass",
+    "substrate",
+    "penicillin",
+    "dissolved_oxygen",
+    "pH",
+    "temperature",
+    "volume"
+]
+
+[observation]
+variables = [
+    "dissolved_oxygen",
+    "pH",
+    "temperature",
+    "volume",
+    "substrate"
+]
+
+[actions.substrate_feed]
+min = 0.0
+max = 120.0
+unit = "L/h"
+
+[actions.aeration]
+min = 0.0
+max = 100.0
+unit = "L/h"
+
+[actions.agitation]
+min = 0.0
+max = 300.0
+unit = "RPM"
+
+[measurement_costs]
+dissolved_oxygen = 0.0
+pH = 0.0
+temperature = 0.0
+volume = 0.0
+substrate = 1.0
