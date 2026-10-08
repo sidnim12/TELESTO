@@ -9,6 +9,7 @@ from pathlib import Path
 
 import numpy as np
 
+
 # ---------------------------------------------------------------------------
 # Default IndPenSim configuration
 # ---------------------------------------------------------------------------
@@ -35,6 +36,9 @@ class FermentationBatch:
     substrate: np.ndarray
     penicillin: np.ndarray
     biomass: np.ndarray
+    dissolved_oxygen: np.ndarray
+    pH: np.ndarray
+    temperature: np.ndarray
     volume: np.ndarray
 
     @property
@@ -92,6 +96,7 @@ class FermentationSimulator:
 
         package_root = self.simulator_root / "simulator"
         package_init = package_root / "__init__.py"
+
         if not package_init.is_file():
             raise FileNotFoundError(
                 f"IndPenSim package entry point not found at: {package_init}"
@@ -103,18 +108,25 @@ class FermentationSimulator:
                 package_init,
                 submodule_search_locations=[str(package_root)],
             )
+
             if spec is None or spec.loader is None:
-                raise ImportError(f"Unable to load IndPenSim from: {package_init}")
+                raise ImportError(
+                    f"Unable to load IndPenSim from: {package_init}"
+                )
 
             module = module_from_spec(spec)
             sys.modules[_EXTERNAL_PACKAGE_NAME] = module
+
             try:
                 spec.loader.exec_module(module)
             except Exception:
                 sys.modules.pop(_EXTERNAL_PACKAGE_NAME, None)
                 raise
 
-        runner_module = import_module(f"{_EXTERNAL_PACKAGE_NAME}.simulation_runner")
+        runner_module = import_module(
+            f"{_EXTERNAL_PACKAGE_NAME}.simulation_runner"
+        )
+
         return runner_module.indpensim_run
 
     def run_batch(self) -> FermentationBatch:
@@ -132,6 +144,9 @@ class FermentationSimulator:
             substrate=np.asarray(result.S.y, dtype=float),
             penicillin=np.asarray(result.P.y, dtype=float),
             biomass=np.asarray(result.X.y, dtype=float),
+            dissolved_oxygen=np.asarray(result.DO2.y, dtype=float),
+            pH=np.asarray(result.pH.y, dtype=float),
+            temperature=np.asarray(result.T.y, dtype=float),
             volume=np.asarray(result.V.y, dtype=float),
         )
 
@@ -150,6 +165,9 @@ class FermentationSimulator:
             "substrate": batch.substrate,
             "penicillin": batch.penicillin,
             "biomass": batch.biomass,
+            "dissolved_oxygen": batch.dissolved_oxygen,
+            "pH": batch.pH,
+            "temperature": batch.temperature,
             "volume": batch.volume,
         }
 
