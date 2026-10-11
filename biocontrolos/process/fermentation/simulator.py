@@ -9,7 +9,6 @@ from pathlib import Path
 
 import numpy as np
 
-
 # ---------------------------------------------------------------------------
 # Default IndPenSim configuration
 # ---------------------------------------------------------------------------
@@ -64,6 +63,7 @@ class FermentationSimulator:
         self,
         simulator_root: Path | None = None,
         batch_flags: dict | None = None,
+        seed: int | None = None,
     ) -> None:
 
         project_root = Path(__file__).resolve().parents[3]
@@ -79,6 +79,7 @@ class FermentationSimulator:
             if batch_flags is not None
             else DEFAULT_BATCH_FLAGS.copy()
         )
+        self.seed = seed
 
         if not self.simulator_root.exists():
             raise FileNotFoundError(
@@ -134,10 +135,18 @@ class FermentationSimulator:
 
         indpensim_run = self._load_runner()
 
-        result = indpensim_run(
-            1,
-            self.batch_flags,
-        )
+        random_state = np.random.get_state() if self.seed is not None else None
+        if self.seed is not None:
+            np.random.seed(self.seed)
+
+        try:
+            result = indpensim_run(
+                1,
+                self.batch_flags,
+            )
+        finally:
+            if random_state is not None:
+                np.random.set_state(random_state)
 
         batch = FermentationBatch(
             time=np.asarray(result.S.t, dtype=float),
