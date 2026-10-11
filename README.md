@@ -18,11 +18,41 @@ The first research domain is **fed-batch microbial fermentation**.
 
 ---
 
+## Executive Overview
+
+| Area | Summary |
+|---|---|
+| **Purpose** | Research adaptive decision-making for biological manufacturing under uncertainty and changing process dynamics. |
+| **Initial domain** | Fed-batch microbial fermentation using IndPenSim / PenSimPy as the digital-twin testbed. |
+| **Core capability** | Decide whether to control, measure, experiment, wait, adapt, or escalate. |
+| **Safety position** | All proposed actions remain subject to explicit constraints, safety checks, and human approval. |
+| **Current stage** | Phase 1: fermentation environment and digital-twin integration. |
+| **Research standard** | Reproducible experiments, strong baselines, calibrated uncertainty, and controlled ablations. |
+
+## Navigation
+
+- [Research question](#research-question)
+- [Current status](#current-status)
+- [Phase 1: Fermentation digital twin](#phase-1--fermentation-digital-twin)
+- [Research roadmap](#research-roadmap)
+- [Repository structure](#repository-structure)
+- [Design principles](#design-principles)
+- [Detailed documentation](docs/)
+- [Project progress](docs/progress/README.md)
+- [Architecture decision records](docs/decisions/)
+
+> Technical diagrams and detailed research modules are preserved below in expandable sections for readers who need implementation-level context.
+
+---
+
 # Research Question
 
 > **Can an uncertainty-aware decision system adapt a learned fermentation policy across scale and operating-regime shifts while learning when additional information is worth acquiring?**
 
 ---
+
+<details>
+<summary><strong>View the complete research architecture and decision loop</strong></summary>
 
 # Research Architecture
 
@@ -146,6 +176,8 @@ flowchart TD
     P --> E
 ```
 
+</details>
+
 ---
 
 # Current Status
@@ -207,6 +239,9 @@ The simulator is the **process world**.
 TELESTO will provide the abstraction used by future control, learning, and decision-making components.
 
 ---
+
+<details>
+<summary><strong>View the detailed fermentation environment, state, observation, action, and deliverable definitions</strong></summary>
 
 # Fermentation Environment
 
@@ -341,6 +376,8 @@ flowchart TB
     K --> L
 ```
 
+</details>
+
 ---
 
 # Research Roadmap
@@ -364,6 +401,9 @@ flowchart LR
 ```
 
 ---
+
+<details>
+<summary><strong>View detailed research modules: regime shifts, uncertainty, information, memory, counterfactuals, LLMs, safety, and evaluation</strong></summary>
 
 # Scale and Operating-Regime Shift
 
@@ -766,6 +806,8 @@ flowchart TB
     T --> E
     T --> H
 ```
+
+</details>
 
 ---
 
