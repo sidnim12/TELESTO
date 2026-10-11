@@ -195,5 +195,8 @@ class FermentationSimulator:
         if not np.all(np.isfinite(batch.time)):
             raise ValueError("Time trajectory contains non-finite values.")
 
+        if not np.all(np.diff(batch.time) > 0):
+            raise ValueError("Time trajectory must be strictly increasing.")
+
         if batch.duration_hours <= 0:
             raise ValueError("Simulation did not advance in time.")

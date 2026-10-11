@@ -1,3 +1,5 @@
+import pytest
+
 from biocontrolos.process.base import Action, ActionKind
 from biocontrolos.process.fermentation.adapter import FermentationAdapter
 
@@ -60,6 +62,9 @@ def test_valid_control_action():
     )
 
     assert adapter.validate_action(action)
+
+    with pytest.raises(NotImplementedError, match="Action-conditioned transitions"):
+        adapter.transition_model(action)
 
 
 def test_invalid_control_action():

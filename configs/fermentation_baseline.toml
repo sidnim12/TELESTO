@@ -1,9 +1,16 @@
+# Versioned Phase 1 experimental record. Runtime code does not currently load
+# this file; simulator defaults and adapter schemas remain code-defined.
+
 [metadata]
 name = "telesto-fermentation-baseline"
 version = "0.1"
 process = "fed-batch microbial fermentation"
 simulator = "IndPenSim"
 status = "research-testbed"
+configuration_role = "versioned-experimental-record"
+
+[experiment]
+seed = 42
 
 [simulator]
 batch_fault_order_reference = 0

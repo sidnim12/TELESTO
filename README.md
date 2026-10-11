@@ -200,7 +200,9 @@ flowchart TD
 > **Current principle: environment before intelligence.**
 
 We are **not** starting with RL or an LLM.  
-The first task is to build and validate the fermentation environment.
+Baseline fermentation integration and seeded batch replay are validated.
+Interactive, action-conditioned transitions remain the gating item before
+closed-loop PID, MPC, or RL experiments.
 
 ---
 
