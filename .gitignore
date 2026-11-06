@@ -8,6 +8,13 @@ dist/
 build/
 *.egg-info/
 .env
+node_modules/
+.npm-cache/
+*.tsbuildinfo
+apps/dashboard/.env.local
+playwright-report/
+test-results/
+.test-tmp*/
 data/raw/
 data/interim/
 data/processed/

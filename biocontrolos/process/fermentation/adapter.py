@@ -261,7 +261,7 @@ class FermentationAdapter(ProcessAdapter):
         """Describe the initial process observation channels."""
         return {
             "dissolved_oxygen": {
-                "unit": "%",
+                "unit": "mg/L",
                 "type": "continuous",
                 "role": "online",
             },
